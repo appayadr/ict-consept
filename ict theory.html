@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نگاهی به ICT: مفاهیم و ستاپ‌ها</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Neutral -->
+    <!-- Application Structure Plan: The application is structured as a guided learning path. It starts with a hero section explaining 'what' and 'why' ICT is important. It then moves to an interactive 'Core Concepts' section using clickable cards to break down foundational theories into digestible pieces. This is followed by the most critical section, 'Trading Setups,' where users can click buttons to see visual, annotated chart examples for each strategy, making abstract ideas concrete. The app concludes with key principles and a summary. This structure was chosen to transform a linear text document into an engaging, interactive educational tool, enhancing understanding and retention by separating theory from visual application. -->
+    <!-- Visualization & Content Choices: For the 'Trading Setups', Chart.js is used to create simplified, dynamic candlestick charts. Report Info: Trading Setups like 'Liquidity Grab' -> Goal: Visually demonstrate a complex trading action -> Viz Method: Annotated Candlestick Chart (Canvas) -> Interaction: User clicks a setup button, JS updates the chart data and annotations, and displays a relevant explanation. -> Justification: Visual examples are far more effective than text alone for teaching trading patterns. Dynamic updates provide a responsive and modern user experience. -> Library: Chart.js and chartjs-plugin-annotation. Other concepts are presented using interactive HTML/CSS cards to organize information clearly. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f8f7f4;
+            color: #3d405b;
+        }
+        .rtl-chart-tooltip {
+            direction: rtl;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        .active-tab {
+            background-color: #81b29a !important;
+            color: #ffffff !important;
+            border-color: #81b29a !important;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 450px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-[#e07a5f]/90 backdrop-blur-sm shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-2xl md:text-3xl font-bold text-white text-center">راهنمای جامع معامله‌گری به سبک ICT</h1>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+
+        <section id="intro" class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#3d405b] mb-4">نگاهی عمیق به منطق بازار</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-700 leading-relaxed">
+                در دنیای معامله‌گری، سبک ICT (Inner Circle Trader) یک روش نیست، بلکه یک چارچوب فکری برای درک «پول هوشمند» و دلیل اصلی حرکات قیمت است. این راهنما به شما کمک می‌کند تا با مفاهیم کلیدی و ستاپ‌های عملی این سبک آشنا شوید و منطق پشت نوسانات بازار را کشف کنید.
+            </p>
+        </section>
+
+        <section id="concepts" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-10 text-[#3d405b]">مفاهیم کلیدی: ستون‌های اصلی ICT</h2>
+            <p class="text-center max-w-2xl mx-auto mb-12 text-gray-600">
+                برای درک سبک ICT، ابتدا باید با پنج مفهوم بنیادی آن آشنا شوید. این مفاهیم به شما دیدی می‌دهند که چرا بازار به شیوه‌ای خاص حرکت می‌کند. روی هر کارت کلیک کنید تا توضیحات مربوط به آن را مشاهده نمایید.
+            </p>
+            <div id="concepts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            </div>
+        </section>
+
+        <section id="setups" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-10 text-[#3d405b]">ستاپ‌های معاملاتی: از تئوری تا عمل</h2>
+            <p class="text-center max-w-2xl mx-auto mb-12 text-gray-600">
+                در این بخش، مفاهیم کلیدی ICT را در قالب ستاپ‌های معاملاتی واقعی مشاهده می‌کنید. با کلیک بر روی هر ستاپ، نمودار و توضیحات مربوط به آن نمایش داده می‌شود تا ببینید چطور از این دانش در معاملات واقعی استفاده کنید.
+            </p>
+            <div class="flex justify-center flex-wrap gap-3 mb-8" id="setup-buttons">
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 transition-all duration-300">
+                <div class="chart-container">
+                    <canvas id="ictChart"></canvas>
+                </div>
+                <div id="setup-explanation" class="mt-8 text-center">
+                    <h3 id="setup-title" class="text-2xl font-bold mb-3 text-[#3d405b]"></h3>
+                    <p id="setup-description" class="text-gray-700 leading-loose"></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tips" class="bg-white/70 rounded-2xl shadow-lg p-8 md:p-12">
+            <h2 class="text-3xl font-bold text-center mb-10 text-[#3d405b]">نکات طلایی برای معامله‌گران ICT</h2>
+             <p class="text-center max-w-2xl mx-auto mb-12 text-gray-600">
+                موفقیت در سبک ICT نیازمند رعایت اصولی مشخص است. این نکات کلیدی، نقشه راه شما برای استفاده صحیح از این سبک و جلوگیری از اشتباهات رایج خواهد بود.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-[#f4f1de] p-6 rounded-xl border border-[#e07a5f]/30">
+                    <h3 class="font-bold text-xl mb-3 text-[#3d405b]">۱. اولویت با ساختار بازار</h3>
+                    <p class="text-gray-600">همیشه تحلیل خود را با شناسایی سقف‌ها، کف‌ها و شکست‌های مهم شروع کنید. روند، دوست شماست تا زمانی که ساختار آن تغییر نکرده باشد.</p>
+                </div>
+                <div class="bg-[#f4f1de] p-6 rounded-xl border border-[#e07a5f]/30">
+                    <h3 class="font-bold text-xl mb-3 text-[#3d405b]">۲. شکارچی نقدینگی باشید</h3>
+                    <p class="text-gray-600">به جای دنبال کردن کورکورانه اندیکاتورها، به دنبال نواحی باشید که استاپ‌لاس‌ها جمع شده‌اند. حرکات اصلی اغلب پس از یک شکار نقدینگی رخ می‌دهند.</p>
+                </div>
+                <div class="bg-[#f4f1de] p-6 rounded-xl border border-[#e07a5f]/30">
+                    <h3 class="font-bold text-xl mb-3 text-[#3d405b]">۳. زمان‌بندی همه چیز است</h3>
+                    <p class="text-gray-600">یک ستاپ عالی در زمان اشتباه، به احتمال زیاد با شکست مواجه می‌شود. روی ساعات باز شدن بازارهای لندن و نیویورک تمرکز کنید.</p>
+                </div>
+                 <div class="bg-[#f4f1de] p-6 rounded-xl border border-[#e07a5f]/30">
+                    <h3 class="font-bold text-xl mb-3 text-[#3d405b]">۴. مدیریت ریسک حیاتی است</h3>
+                    <p class="text-gray-600">ورود دقیق بدون مدیریت سرمایه و تعیین حد ضرر مناسب، بی‌فایده است. ICT ابزاری برای افزایش احتمال موفقیت است، نه تضمین آن.</p>
+                </div>
+                 <div class="bg-[#f4f1de] p-6 rounded-xl border border-[#e07a5f]/30">
+                    <h3 class="font-bold text-xl mb-3 text-[#3d405b]">۵. صبر، کلید موفقیت</h3>
+                    <p class="text-gray-600">ستاپ‌های باکیفیت ICT هر روز و هر ساعت شکل نمی‌گیرند. صبور باشید و منتظر بمانید تا بازار فرصتی با احتمال موفقیت بالا در اختیار شما قرار دهد.</p>
+                </div>
+                 <div class="bg-[#f4f1de] p-6 rounded-xl border border-[#e07a5f]/30">
+                    <h3 class="font-bold text-xl mb-3 text-[#3d405b]">۶. ICT یک طرز فکر است</h3>
+                    <p class="text-gray-600">این سبک را نه به عنوان مجموعه‌ای از قوانین خشک، بلکه به عنوان یک چارچوب برای فکر کردن مانند پول هوشمند و درک منطق بازار در نظر بگیرید.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="conclusion" class="text-center mt-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#3d405b] mb-4">جمع‌بندی: فراتر از یک استراتژی</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-700 leading-relaxed">
+                سبک ICT به شما یاد می‌دهد که مانند مؤسسات بزرگ فکر کنید و دلیل حرکت بازار را بفهمید. یادگیری آن در ابتدا شاید چالش‌برانگیز باشد، اما با تمرین و صبر، دیدگاهی کاملاً متفاوت به بازار پیدا خواهید کرد که می‌تواند شما را از یک معامله‌گر عادی به معامله‌گری حرفه‌ای تبدیل کند.
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#3d405b] mt-16 py-6">
+        <div class="container mx-auto px-6 text-center text-white/80">
+            <p>این محتوای آموزشی به صورت تعاملی برای درک بهتر مفاهیم ICT طراحی شده است.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const concepts = [
+                {
+                    title: 'ساختار بازار',
+                    icon: '📈',
+                    description: 'تمام تحلیل‌ها از این نقطه شروع می‌شود. ICT معتقد است بدون تشخیص سقف‌ها (High)، کف‌ها (Low) و شکست‌های مهم (Break of Structure)، معامله‌گر در تاریکی حرکت می‌کند. تغییر روند همیشه با تغییر ساختار بازار همراه است.'
+                },
+                {
+                    title: 'نقدینگی',
+                    icon: '💧',
+                    description: 'بازارسازها برای اجرای سفارش‌های بزرگ به نقدینگی نیاز دارند. این نقدینگی معمولاً در قالب سفارش‌های حد ضرر (Stop Loss) معامله‌گران خرد، پشت سقف‌ها و کف‌های قبلی پنهان است. به همین دلیل بازار قبل از شروع حرکت اصلی، به سمت این نواحی حرکت کرده و آن‌ها را شکار می‌کند.'
+                },
+                {
+                    title: 'بلوک سفارش (Order Block)',
+                    icon: '🧱',
+                    description: 'آخرین کندل نزولی قبل از یک حرکت صعودی قوی (Bullish OB) یا آخرین کندل صعودی قبل از یک حرکت نزولی قوی (Bearish OB). این نواحی نشان‌دهنده ورود مؤسسات مالی به معامله هستند و قیمت در آینده به آن‌ها واکنش نشان می‌دهد.'
+                },
+                {
+                    title: 'عدم تعادل (FVG)',
+                    icon: '░',
+                    description: 'وقتی بازار با شتاب در یک جهت حرکت می‌کند، بین کندل اول و سوم یک شکاف یا گپ قیمتی ایجاد می‌شود که به آن Fair Value Gap می‌گویند. این شکاف‌ها مانند آهنربا عمل کرده و قیمت تمایل دارد در آینده برای پر کردن آن‌ها بازگردد.'
+                },
+                {
+                    title: 'زمان و قیمت',
+                    icon: '⏰',
+                    description: 'یکی از ویژگی‌های خاص ICT، اهمیت دادن به «زمان» است. حرکات اصلی بازار معمولاً در ساعات خاصی (Killzones) مانند باز شدن سشن‌های لندن و نیویورک رخ می‌دهند. معامله‌گر باید بداند چه ساعتی احتمال شکل‌گیری ستاپ بیشتر است.'
+                }
+            ];
+
+            const conceptsGrid = document.getElementById('concepts-grid');
+            concepts.forEach(concept => {
+                const card = document.createElement('div');
+                card.className = 'concept-card bg-white rounded-xl shadow-md p-6 cursor-pointer transform hover:-translate-y-2 transition-all duration-300';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-xl text-[#3d405b]">${concept.title}</h3>
+                        <span class="text-3xl">${concept.icon}</span>
+                    </div>
+                    <p class="description text-gray-600 mt-4 hidden leading-relaxed">${concept.description}</p>
+                `;
+                conceptsGrid.appendChild(card);
+
+                card.addEventListener('click', () => {
+                    card.classList.toggle('bg-[#f4f1de]');
+                    card.querySelector('.description').classList.toggle('hidden');
+                });
+            });
+
+            const setups = {
+                bos: {
+                    title: 'شکست ساختار (BOS)',
+                    description: 'ورود پس از شکسته شدن یک سقف یا کف کلیدی در جهت روند اصلی. این شکست، تأییدی بر ادامه روند است و معامله‌گر منتظر بازگشت قیمت به یک ناحیه مهم (مانند Order Block یا FVG) برای ورود می‌ماند.',
+                    data: {
+                        labels: Array.from({ length: 15 }, (_, i) => i + 1),
+                        datasets: [
+                            {
+                                type: 'line',
+                                label: 'قیمت',
+                                data: [{x: 1, y: 20}, {x: 2, y: 21.5}, {x: 3, y: 22.5}, {x: 4, y: 23.5}, {x: 5, y: 25.5}, {x: 6, y: 24}, {x: 7, y: 22.5}, {x: 8, y: 26.5}, {x: 9, y: 28.5}, {x: 10, y: 27}, {x: 11, y: 26}, {x: 12, y: 30}, {x: 13, y: 30.5}, {x: 14, y: 31.5}, {x: 15, y: 32.5}],
+                                borderColor: '#81b29a',
+                                borderWidth: 2,
+                                tension: 0,
+                                stepped: true,
+                                pointRadius: 0
+                            }
+                        ]
+                    },
+                    annotations: [
+                        { type: 'line', yMin: 22.5, yMax: 22.5, xMin: 0, xMax: 6, borderColor: '#e07a5f', borderWidth: 2, borderDash: [5, 5], label: { content: 'سقف قبلی', enabled: true, position: 'start', yAdjust: -10, backgroundColor: 'rgba(0,0,0,0)', color: '#e07a5f' } },
+                        { type: 'label', content: 'شکست ساختار (BOS)', backgroundColor: '#3d405b', color: 'white', borderRadius: 4, padding: 6, xValue: 9, yValue: 29.5 }
+                    ]
+                },
+                liquidity_grab: {
+                    title: 'شکار نقدینگی (Stop Hunt)',
+                    description: 'یکی از محبوب‌ترین ستاپ‌های ICT. بازار ابتدا با شکستن یک سقف یا کف قبلی، استاپ‌ها را فعال می‌کند (شکار نقدینگی)، اما قادر به تثبیت نیست و به سرعت در جهت مخالف حرکت می‌کند. این حرکت فریب‌دهنده، فرصت ورود عالی در جهت معکوس را فراهم می‌کند.',
+                    data: {
+                        labels: Array.from({ length: 15 }, (_, i) => i + 1),
+                        datasets: [
+                            {
+                                type: 'line',
+                                label: 'قیمت',
+                                data: [{x: 1, y: 20}, {x: 2, y: 21.5}, {x: 3, y: 22.5}, {x: 4, y: 23.5}, {x: 5, y: 25.5}, {x: 6, y: 27}, {x: 7, y: 26.5}, {x: 8, y: 28.5}, {x: 9, y: 29.5}, {x: 10, y: 30.5}, {x: 11, y: 29.5}, {x: 12, y: 27.5}, {x: 13, y: 25.5}, {x: 14, y: 23.5}, {x: 15, y: 21.5}],
+                                borderColor: '#e07a5f',
+                                borderWidth: 2,
+                                tension: 0,
+                                stepped: true,
+                                pointRadius: 0
+                            }
+                        ]
+                    },
+                    annotations: [
+                        { type: 'line', yMin: 28.5, yMax: 28.5, xMin: 0, xMax: 10, borderColor: '#3d405b', borderWidth: 2, borderDash: [5, 5], label: { content: 'نقدینگی', enabled: true, position: 'start', yAdjust: -10, backgroundColor: 'rgba(0,0,0,0)', color: '#3d405b' } },
+                        { type: 'box', xMin: 9, xMax: 11, yMin: 29.5, yMax: 30.5, backgroundColor: 'rgba(224, 122, 95, 0.3)' },
+                        { type: 'label', content: 'شکار نقدینگی', backgroundColor: '#e07a5f', color: 'white', borderRadius: 4, padding: 6, xValue: 10, yValue: 30.8 },
+                        { type: 'label', content: 'ورود', backgroundColor: '#81b29a', color: 'white', borderRadius: 4, padding: 6, xValue: 11.5, yValue: 29.5 }
+                    ]
+                },
+                order_block: {
+                    title: 'ورود از بلوک سفارش (Order Block)',
+                    description: 'آخرین کندل نزولی پیش از یک حرکت صعودی قوی، یک "بلوک سفارش صعودی" است. بازار اغلب برای بازتست به این ناحیه بازمی‌گردد و سپس به حرکت اصلی خود ادامه می‌دهد.',
+                    data: {
+                        labels: Array.from({ length: 15 }, (_, i) => i + 1),
+                        datasets: [
+                            {
+                                type: 'line',
+                                label: 'قیمت',
+                                data: [{x: 1, y: 30.5}, {x: 2, y: 29.5}, {x: 3, y: 28}, {x: 4, y: 25}, {x: 5, y: 28}, {x: 6, y: 30.5}, {x: 7, y: 33}, {x: 8, y: 34.5}, {x: 9, y: 33}, {x: 10, y: 31}, {x: 11, y: 29.5}, {x: 12, y: 31}, {x: 13, y: 33}, {x: 14, y: 34.5}],
+                                borderColor: '#81b29a',
+                                borderWidth: 2,
+                                tension: 0,
+                                stepped: true,
+                                pointRadius: 0
+                            }
+                        ]
+                    },
+                    annotations: [
+                        { type: 'box', xMin: 1.5, xMax: 3.5, yMin: 25, yMax: 28, backgroundColor: 'rgba(129, 178, 154, 0.3)' },
+                        { type: 'label', content: 'بلوک سفارش (OB)', backgroundColor: '#81b29a', color: 'white', borderRadius: 4, padding: 6, xValue: 2.5, yValue: 26.5 },
+                        { type: 'label', content: 'ورود در بازگشت به OB', backgroundColor: '#3d405b', color: 'white', borderRadius: 4, padding: 6, xValue: 10.5, yValue: 30 }
+                    ]
+                },
+                fvg: {
+                    title: 'ورود از شکاف ارزشی (FVG)',
+                    description: 'وقتی بازار به سرعت حرکت می‌کند، یک شکاف قیمتی بین کندل‌ها ایجاد می‌شود. این شکاف‌ها معمولاً پر می‌شوند. ورود در ناحیه FVG زمانی که قیمت به آن باز می‌گردد، یکی از ستاپ‌های رایج است.',
+                    data: {
+                        labels: Array.from({ length: 15 }, (_, i) => i + 1),
+                        datasets: [
+                            {
+                                type: 'line',
+                                label: 'قیمت',
+                                data: [{x: 1, y: 25}, {x: 2, y: 27}, {x: 3, y: 29.5}, {x: 4, y: 34}, {x: 5, y: 36}, {x: 6, y: 35}, {x: 7, y: 33}, {x: 8, y: 31.5}, {x: 9, y: 30.5}, {x: 10, y: 32}, {x: 11, y: 34}, {x: 12, y: 35.5}, {x: 13, y: 37}],
+                                borderColor: '#e07a5f',
+                                borderWidth: 2,
+                                tension: 0,
+                                stepped: true,
+                                pointRadius: 0
+                            }
+                        ]
+                    },
+                    annotations: [
+                        { type: 'box', xMin: 3, xMax: 4, yMin: 29.5, yMax: 31, backgroundColor: 'rgba(224, 122, 95, 0.3)' },
+                        { type: 'label', content: 'شکاف ارزشی (FVG)', backgroundColor: '#e07a5f', color: 'white', borderRadius: 4, padding: 6, xValue: 3.5, yValue: 30.2 },
+                        { type: 'label', content: 'ورود در پر شدن FVG', backgroundColor: '#3d405b', color: 'white', borderRadius: 4, padding: 6, xValue: 8.5, yValue: 31 }
+                    ]
+                }
+            };
+
+            const setupButtonsContainer = document.getElementById('setup-buttons');
+            const setupTitle = document.getElementById('setup-title');
+            const setupDescription = document.getElementById('setup-description');
+            
+            let currentActiveButton = null;
+
+            Object.keys(setups).forEach((key, index) => {
+                const button = document.createElement('button');
+                button.className = 'px-4 py-2 text-base font-semibold border-2 border-gray-300 rounded-lg transition-all duration-300 hover:bg-[#81b29a] hover:text-white hover:border-[#81b29a]';
+                button.textContent = setups[key].title;
+                button.dataset.setup = key;
+                setupButtonsContainer.appendChild(button);
+
+                if (index === 0) {
+                    button.classList.add('active-tab');
+                    currentActiveButton = button;
+                }
+            });
+
+            const ctx = document.getElementById('ictChart').getContext('2d');
+            
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {},
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            bodyFont: {
+                                family: 'Vazirmatn'
+                            },
+                            titleFont: {
+                                family: 'Vazirmatn'
+                            },
+                            rtl: true,
+                            xAlign: 'center',
+                            yAlign: 'bottom',
+                        },
+                        annotation: {
+                            annotations: []
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                display: false
+                            }
+                        },
+                        y: {
+                           grid: {
+                                color: '#e5e7eb'
+                           },
+                           ticks: {
+                               color: '#6b7280',
+                               font: {
+                                   family: 'Vazirmatn'
+                               }
+                           }
+                        }
+                    }
+                }
+            });
+
+            function updateChart(setupKey) {
+                const setup = setups[setupKey];
+                setupTitle.textContent = setup.title;
+                setupDescription.textContent = setup.description;
+                
+                chart.data = setup.data;
+                chart.options.plugins.annotation.annotations = setup.annotations;
+                chart.update();
+            }
+            
+             setupButtonsContainer.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    const setupKey = e.target.dataset.setup;
+                    if (currentActiveButton) {
+                        currentActiveButton.classList.remove('active-tab');
+                    }
+                    e.target.classList.add('active-tab');
+                    currentActiveButton = e.target;
+                    updateChart(setupKey);
+                }
+            });
+
+            updateChart('bos');
+        });
+    </script>
+</body>
+</html>
